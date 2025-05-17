@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service
 import java.io.FileInputStream
 import kotlin.system.exitProcess
 
-//@Service
+@Service
 class FirebaseService {
     val log = KotlinLogging.logger {}
 
@@ -20,7 +20,7 @@ class FirebaseService {
     init {
         if (Env.firebaseServiceFile?.exists() != true) {
             log.error { "No firebase service file found!" }
-       //     exitProcess(1)
+            exitProcess(1)
         } else {
             FileInputStream(Env.firebaseServiceFile.absolutePath).use { fis ->
                 val content = JSONObject(String(fis.readBytes()))

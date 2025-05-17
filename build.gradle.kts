@@ -13,12 +13,14 @@ repositories {
 }
 
 val exposedVersion = "0.61.0"
+val jwtVersion = "0.11.5"
 dependencies {
     implementation(kotlin("script-runtime"))
 
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-configuration-processor")
+
 
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -31,6 +33,7 @@ dependencies {
     implementation ("mysql:mysql-connector-java:8.0.29")
 
     implementation ("com.auth0:java-jwt:4.0.0")
+
     implementation ("com.google.code.gson:gson:2.9.0")
     implementation("io.github.microutils:kotlin-logging-jvm:2.0.11")
 
