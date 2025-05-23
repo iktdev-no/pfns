@@ -44,3 +44,5 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+web/node_modules
