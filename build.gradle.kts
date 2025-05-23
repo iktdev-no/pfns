@@ -39,6 +39,11 @@ dependencies {
 
     implementation("com.google.firebase:firebase-admin:9.2.0")
 
+    implementation("com.google.api-client:google-api-client:1.31.2")
+    implementation("com.google.auth:google-auth-library-oauth2-http:1.15.0")
+
+
+
     testImplementation(kotlin("test"))
 }
 

@@ -1,4 +1,4 @@
-package no.iktdev.pfns.controllers
+package no.iktdev.pfns.api.controllers
 
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -7,6 +7,5 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/auth")
 class AuthenticationController {
 
-    fun createApiToken()
 
 }

@@ -16,3 +16,5 @@ fun HttpServletRequest?.getRequestersIp(): String? {
         this.remoteAddr
     } else xforwardedIp
 }
+
+class UserDisabledException(override val message: String = "User is disabled"): Exception()

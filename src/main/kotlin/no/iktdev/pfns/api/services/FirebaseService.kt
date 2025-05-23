@@ -1,4 +1,4 @@
-package no.iktdev.pfns.services
+package no.iktdev.pfns.api.services
 
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.firebase.FirebaseApp
@@ -23,16 +23,20 @@ class FirebaseService {
             exitProcess(1)
         } else {
             FileInputStream(Env.firebaseServiceFile.absolutePath).use { fis ->
-                val content = JSONObject(String(fis.readBytes()))
-                val accountType = content.getString("type")
-                val projectId = content.getString("project_id")
-                fis.reset()
                 val options = FirebaseOptions.builder()
                     .setCredentials(GoogleCredentials.fromStream(fis))
                     .build()
                 firebaseApp = FirebaseApp.initializeApp(options)
-                log.info("Instantiated FirebaseApp on $projectId using a $accountType")
             }
+            if (firebaseApp != null) {
+                FileInputStream(Env.firebaseServiceFile.absolutePath).use { fis ->
+                    val content = JSONObject(String(fis.readBytes()))
+                    val accountType = content.getString("type")
+                    val projectId = content.getString("project_id")
+                    log.info("Instantiated FirebaseApp on $projectId using a $accountType")
+                }
+            }
+
         }
 
     }
