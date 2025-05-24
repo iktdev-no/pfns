@@ -1,4 +1,4 @@
-package no.iktdev.pfns.api
+package no.iktdev.pfns.api.table
 
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.ResultRow

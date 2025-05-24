@@ -3,7 +3,7 @@ package no.iktdev.pfns.token
 import com.auth0.jwt.JWT
 import no.iktdev.pfns.Env
 import no.iktdev.pfns.InstantFrom
-import no.iktdev.pfns.api.ApiToken
+import no.iktdev.pfns.api.table.ApiToken
 import org.springframework.stereotype.Service
 
 @Service

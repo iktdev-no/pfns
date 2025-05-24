@@ -3,7 +3,7 @@ package no.iktdev.pfns
 import mu.KotlinLogging
 import no.iktdev.pfns.database.MySqlDataSource
 import no.iktdev.pfns.interceptor.AuthorizationInterceptor
-import no.iktdev.pfns.api.ApiToken
+import no.iktdev.pfns.api.table.ApiToken
 import no.iktdev.pfns.web.tables.UserRefreshToken
 import no.iktdev.pfns.web.tables.UserTable
 import org.jetbrains.exposed.sql.SchemaUtils

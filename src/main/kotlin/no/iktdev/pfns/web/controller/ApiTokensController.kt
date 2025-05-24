@@ -1,7 +1,7 @@
 package no.iktdev.pfns.web.controller
 
-import no.iktdev.pfns.api.ApiToken
-import no.iktdev.pfns.api.ExposableApiTokenObject
+import no.iktdev.pfns.api.table.ApiToken
+import no.iktdev.pfns.api.table.ExposableApiTokenObject
 import no.iktdev.pfns.getRequestersIp
 import no.iktdev.pfns.interceptor.Mode
 import no.iktdev.pfns.interceptor.RequiresWebAuthentication
