@@ -135,7 +135,7 @@ jobs:
       - name: Build Spring Boot backend
         run: |
           chmod +x ./gradlew
-          ./gradlew :apps:ui:bootJar
+          ./gradlew bootJar
           echo "Build completed"          
 
       - name: Save new backend build to cache
