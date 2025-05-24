@@ -15,10 +15,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Configuration
+import org.springframework.core.io.Resource
 import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.web.servlet.config.annotation.CorsRegistry
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
+import org.springframework.web.servlet.resource.PathResourceResolver
 import kotlin.system.exitProcess
 
 val log = KotlinLogging.logger {}
@@ -62,6 +65,22 @@ class InterceptorConfiguration(
         super.addInterceptors(registry)
         log.info { "Adding AuthorizationInterceptor" }
         registry.addInterceptor(authInterceptor).addPathPatterns("/**")
+    }
+
+    override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
+        registry.addResourceHandler("/**")
+            .addResourceLocations("classpath:/static/")
+            .resourceChain(true)
+            .addResolver(object: PathResourceResolver() {
+                override fun getResource(resourcePath: String, location: Resource): Resource? {
+                    // Show index.html if no resource was found
+                    return if (!location.createRelative(resourcePath).exists() && !location.createRelative(resourcePath).isReadable) {
+                        location.createRelative("index.html");
+                    } else {
+                        location.createRelative(resourcePath);
+                    }
+                }
+            })
     }
 
     override fun addCorsMappings(registry: CorsRegistry) {
