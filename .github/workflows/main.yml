@@ -60,7 +60,9 @@ jobs:
       - pre-check
     if: ${{ needs.pre-check.outputs.web == 'true' || needs.pre-check.outputs.shouldBuildWeb == 'true' }}
     steps:
-    
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
       - name: Restore cached web build
         id: web_cache
         uses: actions/cache@v3
@@ -77,13 +79,13 @@ jobs:
           node-version: '14'
       - name: Install dependencies
         run: npm install
-        working-directory: web/
+        working-directory: ./web/
 
       - name: Build React app
         run: | 
           export CI=false
           npm run build
-        working-directory: web/
+        working-directory: ./web/
 
       - name: Save new web build to cache
         if: steps.web_cache.outputs.cache-hit != 'true'
@@ -98,8 +100,8 @@ jobs:
       - pre-check
       - build-web
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Restore cached web build
         uses: actions/cache@v3
@@ -153,8 +155,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-backend
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Extract version from build.gradle.kts
         id: extract_version
