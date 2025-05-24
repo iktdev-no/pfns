@@ -4,6 +4,7 @@ import mu.KotlinLogging
 import no.iktdev.pfns.database.MySqlDataSource
 import no.iktdev.pfns.interceptor.AuthorizationInterceptor
 import no.iktdev.pfns.api.table.ApiToken
+import no.iktdev.pfns.api.table.RegisteredDevices
 import no.iktdev.pfns.web.tables.UserRefreshToken
 import no.iktdev.pfns.web.tables.UserTable
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -30,7 +31,8 @@ class Application {
 val tables: Array<Table> = arrayOf(
     UserTable,
     UserRefreshToken,
-    ApiToken
+    ApiToken,
+    RegisteredDevices
 )
 
 
