@@ -1,7 +1,6 @@
 import { Box, Button, IconButton, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
-import { SessionState } from "../store/session-slice";
 import { envProperties } from "../values";
 import {ReactComponent as Logo} from "../assets/Pfns.svg"
 import { useNavigate } from "react-router-dom";
@@ -9,10 +8,10 @@ import { useAuth } from "../contexts/AuthContext";
 
 
 export default function Header() {
-  const { token, login, logout, loginWithNewAccessToken } = useAuth();
+  const { token, logout, authorized } = useAuth();
     const naviage = useNavigate();
     
-    if (token === null) {
+    if (token === null || !authorized) {
         return (<></>)
     }
 

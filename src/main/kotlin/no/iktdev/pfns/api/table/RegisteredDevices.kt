@@ -18,7 +18,7 @@ import org.jetbrains.exposed.sql.update
 
 object RegisteredDevices : IntIdTable("RegisteredDevice") {
     val serverId = varchar("serverId", 64).nullable() // Having this nullable removes restriction
-    val receiverId = text("receiverId")
+    val receiverId = varchar("receiverId", 128)
     val createdAt = datetime("createdAt").defaultExpression(CurrentDateTime)
     val lastUsed = datetime("lastUsed").nullable()
     val ip = varchar("ip", 45)

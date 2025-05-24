@@ -5,7 +5,9 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import { store } from './store';
+import { getBackendUrl } from './util';
 
+console.log("Starting application...\nUsing Backend", getBackendUrl());
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );

@@ -1,14 +1,14 @@
 import { useDispatch } from "react-redux";
-import { useAuthGuard } from "../authGuard";
 import { envProperties } from "../values";
 import { Box, Typography, Button, Input } from "@mui/material";
 import { use, useState } from "react";
 import { apiFetch } from "../util";
+import { useAuthGuard } from "../contexts/AuthContext";
 
 
 export default function CreateToken() {
     const dispatch = useDispatch();
-    const { checkAuthentication } = useAuthGuard();
+    const { CheckAuthentication } = useAuthGuard();
     const props = envProperties;
     const [serverId, setServerId] = useState<string | null>(null);
     const [apiToken, setApiToken] = useState<string | null>(null);

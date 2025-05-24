@@ -36,7 +36,6 @@ const App = () => {
     <ThemeProvider theme={darkTheme}>
       <AuthProvider>
         <Router>
-
           <Box sx={{ display: "flex", flexDirection: "column", height: "100vh" }}>
             <Header />
             <Box sx={{ display: "flex", flexGrow: 1, justifyContent: "center", alignItems: "center" }}>

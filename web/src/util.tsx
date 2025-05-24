@@ -18,3 +18,18 @@ export async function apiFetch(input: RequestInfo, init?: RequestInit, useCreden
 
     return response;
 }
+
+export const getBackendUrl = (): string => {
+    const { protocol, hostname } = window.location;
+    const port = (hostname === "localhost" || hostname === "127.0.0.1") ? ":8080" : "";
+    return `${protocol}//${hostname}${port}`;
+}
+
+export function logWhenDebug(message: string, ...optionalParams: any[]) {
+    const { hostname } = window.location;
+    if (hostname === "localhost" || hostname === "127.0.0.1") {
+        // Print stack trace after log
+        console.log(message, ...optionalParams);
+        console.trace();
+    }
+}

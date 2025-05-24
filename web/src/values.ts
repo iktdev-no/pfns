@@ -1,4 +1,5 @@
-import exp from "constants";
+import { getBackendUrl } from "./util";
+
 
 export interface LocalStorageKeys {
     accessToken: string;
@@ -25,9 +26,9 @@ const getEnvVariable = (key: string): string => {
 };
 
 export const envProperties: EnvProperties = {
-    backendUrl: getEnvVariable("REACT_APP_BACKEND_API_URL"),
+    backendUrl: getBackendUrl(),
     google: {
         clientId: getEnvVariable("REACT_APP_GOOGLE_CLIENT_ID"),
-        authUrl: getEnvVariable("REACT_APP_BACKEND_API_URL") + "/api/web/auth/login/google",
+        authUrl: getBackendUrl() + "/api/web/auth/login/google",
     }
 }

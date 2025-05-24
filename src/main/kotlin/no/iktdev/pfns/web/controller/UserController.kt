@@ -2,6 +2,8 @@ package no.iktdev.pfns.web.controller
 
 import mu.KotlinLogging
 import no.iktdev.pfns.UserDisabledException
+import no.iktdev.pfns.interceptor.Mode
+import no.iktdev.pfns.interceptor.RequiresWebAuthentication
 import no.iktdev.pfns.web.userAccess.UserAuthenticationService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -35,6 +37,7 @@ class UserController(
         response.addCookie(cookie)
     }
 
+    @RequiresWebAuthentication(Mode.None)
     @GetMapping("/logout")
     fun logout(response: HttpServletResponse) {
         val cookie = Cookie("refreshToken", "").apply {
@@ -46,6 +49,7 @@ class UserController(
         response.addCookie(cookie)
     }
 
+    @RequiresWebAuthentication(Mode.None)
     @GetMapping("/login")
     fun loginWithBoth(
         @CookieValue("refreshToken") refreshToken: String,
@@ -54,7 +58,7 @@ class UserController(
     ): ResponseEntity<String> {
         val isAccessTokenValid = authentication.isAccessTokenValid(accessToken)
         if (isAccessTokenValid) {
-            return ResponseEntity.ok(accessToken)
+            return ResponseEntity.ok(authentication.userService.tokenService.afterBearer(accessToken))
         }
         try {
             val newToken = authentication.getNewTokens(refreshToken) ?: return ResponseEntity.status(401).build()
@@ -65,6 +69,7 @@ class UserController(
         }
     }
 
+    @RequiresWebAuthentication(Mode.None)
     @PostMapping("/login/google")
     fun authenticateGoogle(@RequestBody token: String, response: HttpServletResponse): ResponseEntity<String> {
         try {
@@ -77,6 +82,7 @@ class UserController(
         }
     }
 
+    @RequiresWebAuthentication(Mode.Strict)
     @GetMapping("/refresh")
     fun refreshTokens(@CookieValue("refreshToken") token: String, response: HttpServletResponse): ResponseEntity<String> {
         try {
