@@ -95,6 +95,7 @@ jobs:
           key: web-build-${{ hashFiles('web/**/*') }}        
 
   build-backend:
+    if: always()
     runs-on: ubuntu-latest
     needs:
       - pre-check
