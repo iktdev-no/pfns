@@ -77,13 +77,13 @@ jobs:
           node-version: '14'
       - name: Install dependencies
         run: npm install
-        working-directory: ./web
+        working-directory: web/
 
       - name: Build React app
         run: | 
           export CI=false
           npm run build
-        working-directory: ./web
+        working-directory: web/
 
       - name: Save new web build to cache
         if: steps.web_cache.outputs.cache-hit != 'true'
