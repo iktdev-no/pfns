@@ -13,7 +13,6 @@ repositories {
 }
 
 val exposedVersion = "0.61.0"
-val jwtVersion = "0.11.5"
 dependencies {
     implementation(kotlin("script-runtime"))
 
@@ -52,4 +51,14 @@ tasks.test {
 }
 kotlin {
     jvmToolchain(17)
+}
+
+tasks.bootJar {
+    archiveFileName.set("app.jar")
+    launchScript()
+}
+
+tasks.jar {
+    archiveFileName.set("app.jar")
+    archiveBaseName.set("app")
 }

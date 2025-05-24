@@ -1,0 +1,11 @@
+FROM bskjon/azuljava:17
+EXPOSE 8080
+
+ARG MODULE_NAME
+ARG PASS_APP_VERSION
+
+COPY ./app.jar /usr/share/app/app.jar
+
+RUN echo "$PASS_APP_VERSION"
+
+ENV APP_VERSION=${PASS_APP_VERSION}
