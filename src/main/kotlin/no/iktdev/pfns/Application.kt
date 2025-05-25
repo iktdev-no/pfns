@@ -7,6 +7,7 @@ import no.iktdev.pfns.api.table.ApiToken
 import no.iktdev.pfns.api.table.RegisteredDevices
 import no.iktdev.pfns.web.tables.UserRefreshToken
 import no.iktdev.pfns.web.tables.UserTable
+import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -38,16 +39,22 @@ val tables: Array<Table> = arrayOf(
     RegisteredDevices
 )
 
+fun databaseSetup(database: Database) {
+    transaction(database) {
+        SchemaUtils.createMissingTablesAndColumns(*tables)
+        log.info("Database setup completed")
+    }
+}
 
 var context: ApplicationContext? = null
 fun main(args: Array<String>) {
     val dataSource = MySqlDataSource.fromDatabaseEnv()
-    val database = dataSource.createDatabase().also { x ->
+    val database = dataSource.createDatabase()?.also { x ->
         println(x)
-        transaction(x) {
-            SchemaUtils.createMissingTablesAndColumns(*tables)
-            log.info("Database transaction completed")
-        }
+        databaseSetup(x)
+    } ?: run {
+        log.error { "Failed to connect to database!" }
+        exitProcess(1)
     }
 
     context = runApplication<Application>(*args)
