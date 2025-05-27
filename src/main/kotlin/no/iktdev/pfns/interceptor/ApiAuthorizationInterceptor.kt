@@ -58,7 +58,9 @@ class ApiAuthorizationInterceptor(
             null
         }
         return validation?.mode ?: run {
-            log.warn { "No handler found on ${request.method} @ ${request.requestURI}" }
+            if (request.method != "OPTIONS") {
+                log.warn { "No handler found on ${request.method} @ ${request.requestURI}" }
+            }
             Mode.None
         }
     }

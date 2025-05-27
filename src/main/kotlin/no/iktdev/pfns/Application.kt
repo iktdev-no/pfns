@@ -93,7 +93,8 @@ class InterceptorConfiguration(
 
     override fun addCorsMappings(registry: CorsRegistry) {
         registry.addMapping("/**")
-            .allowedOrigins("localhost", "http://localhost:3000", "localhost:80")
+            .allowedOriginPatterns("https://*.iktdev.no")
+            .allowedOrigins("http://localhost:3000")
             .allowedMethods("GET", "POST", "DELETE", "PUT", "OPTIONS")
             .allowCredentials(true)
     }
