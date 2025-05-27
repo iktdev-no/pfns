@@ -1,9 +1,8 @@
 name: Build
 
 on:
-  push:
-    branches:
-      - main
+  release:
+    types: [created]
 
 jobs:
   pre-check:
@@ -215,6 +214,6 @@ jobs:
             PASS_APP_VERSION=${{ env.VERSION }}
           push: true
           tags: |
-            bskjon/pfns:snapshot
+            bskjon/pfns:latest
             bskjon/pfns:v1-${{ github.sha }}
             bskjon/pfns:v1-${{ steps.docker-tag.outputs.tag }}          
