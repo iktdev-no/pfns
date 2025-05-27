@@ -115,11 +115,11 @@ jobs:
 
       - name: Copy web build files into Spring Boot static resources
         run: |
-          mkdir -p ./backend/src/main/resources/static
-          cp -vr ./web/build/* ./backend/src/main/resources/static
+          mkdir -p ./src/main/resources/static
+          cp -vr ./web/build/* ./src/main/resources/static
 
       - name: List files in static after copy
-        run: ls -lR ./backend/src/main/resources/static
+        run: ls -lR ./src/main/resources/static
 
       - name: Restore Gradle cache
         uses: actions/cache@v3
