@@ -21,6 +21,7 @@ class GoogleAuthenticationService {
 
     fun getUserInfo(token: String): AuthenticatedUser? {
         val payload = validate(token) ?: run {
+            log.warn { "Google ID token failed validation: $token" }
             return null
         }
         return AuthenticatedUser(
@@ -37,7 +38,11 @@ class GoogleAuthenticationService {
     }
 
     private fun validate(token: String): GoogleIdToken.Payload? {
-        val idToken = verifier.verify(token)
-        return idToken.payload
+        val idToken = try {
+            verifier.verify(token)
+        } catch (e: Exception) {
+            null
+        }
+        return idToken?.payload
     }
 }
