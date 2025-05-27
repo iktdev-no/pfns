@@ -38,7 +38,7 @@ class UserTokenService: TokenImpl(Env.webTokenSecret) {
         val isValid = super.isValid(token)
         if (!isValid) return false
         val jit = token.id
-        return UserRefreshToken.isRefreshTokenValid(jit)
+        return UserRefreshToken.isAccessTokenValidWithJit(jit)
     }
 
 

@@ -12,6 +12,16 @@ repositories {
     mavenCentral()
 }
 
+repositories {
+    mavenCentral()
+    maven {
+        url = uri("https://reposilite.iktdev.no/releases")
+    }
+    maven {
+        url = uri("https://reposilite.iktdev.no/snapshots")
+    }
+}
+
 val exposedVersion = "0.61.0"
 dependencies {
     implementation(kotlin("script-runtime"))
@@ -42,8 +52,17 @@ dependencies {
     implementation("com.google.auth:google-auth-library-oauth2-http:1.15.0")
 
 
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.8.1")
+    testImplementation("org.assertj:assertj-core:3.4.1")
+    //testImplementation("org.mockito:mockito-core:3.+")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:5.2.1")
+    testImplementation("org.jetbrains.kotlin:kotlin-test")
 
-    testImplementation(kotlin("test"))
+    testImplementation("com.h2database:h2")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
 tasks.test {

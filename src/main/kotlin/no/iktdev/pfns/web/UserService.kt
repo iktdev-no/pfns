@@ -29,12 +29,16 @@ class UserService(
         return tokenService.createTokenPair(email)
     }
 
-    fun getUserOn(token: String): User? {
-        val email = tokenService.decode(token)?.subject ?: return null
+    fun getUserByAccessToken(accessToken: String): User? {
+        val email = tokenService.decode(accessToken)?.subject ?: return null
         return UserTable.getUser(email)
     }
 
     fun getEmailOnRefreshToken(refreshToken: String): String? {
         return UserRefreshToken.getEmailFromRefreshToken(refreshToken)
+    }
+
+    fun getUserByEmail(email: String): User? {
+        return UserTable.getUser(email)
     }
 }

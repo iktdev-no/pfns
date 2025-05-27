@@ -57,11 +57,16 @@ class UserController(
         response: HttpServletResponse
     ): ResponseEntity<String> {
         val isAccessTokenValid = authentication.isAccessTokenValid(accessToken)
+
         if (isAccessTokenValid) {
-            return ResponseEntity.ok(authentication.userService.tokenService.afterBearer(accessToken))
+            return if (authentication.userCanLogin(accessToken)) {
+                ResponseEntity.ok(authentication.userService.tokenService.afterBearer(accessToken))
+            } else {
+                ResponseEntity.status(401).body("Your user account is disabled")
+            }
         }
         try {
-            val newToken = authentication.getNewTokens(refreshToken) ?: return ResponseEntity.status(401).build()
+            val newToken = authentication.getNewTokens(refreshToken) ?: return ResponseEntity.status(401).body("Your user account is disabled")
             assignRefreshToken(newToken.refreshToken, response)
             return ResponseEntity.ok(newToken.accessToken)
         } catch (e : UserDisabledException) {

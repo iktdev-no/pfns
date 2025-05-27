@@ -30,7 +30,7 @@ class ApiTokensController(
     @RequiresWebAuthentication(Mode.Strict)
     @PostMapping("/create")
     fun generateTokenForServer(@RequestHeader("Authorization") token: String, @RequestBody serverId: String, request: HttpServletRequest): ResponseEntity<String?> {
-        val email = authentication.getUserFromToken(token)?.email ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null)
+        val email = authentication.getUserFromAccessToken(token)?.email ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null)
         val token = apiTokenService.createApiToken(serverId, email, request.getRequestersIp() ?: "unknown")
         return if (token == null || token.isBlank()) {
             ResponseEntity.status(HttpStatus.CONFLICT).body(null);
@@ -42,7 +42,7 @@ class ApiTokensController(
     @RequiresWebAuthentication(Mode.Strict)
     @GetMapping("/all")
     fun getServerApiTokens(@RequestHeader("Authorization") token: String): ResponseEntity<List<ExposableApiTokenObject>> {
-        val user = authentication.getUserFromToken(token) ?: return ResponseEntity.status(401).build()
+        val user = authentication.getUserFromAccessToken(token) ?: return ResponseEntity.status(401).build()
         val myTokens = ApiToken.getMyTokens(user.email).map { it.toExposable() }
         return ResponseEntity.ok(myTokens)
     }
@@ -50,7 +50,7 @@ class ApiTokensController(
     @RequiresWebAuthentication(Mode.Strict)
     @DeleteMapping()
     fun deleteTokenForServer(@RequestHeader("Authorization") token: String, @RequestBody serverId: String, request: HttpServletRequest): ResponseEntity<Boolean> {
-        val email = authentication.getUserFromToken(token)?.email ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null)
+        val email = authentication.getUserFromAccessToken(token)?.email ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null)
         val success = apiTokenService.deleteToken(serverId, email)
         return ResponseEntity.ok(success)
     }

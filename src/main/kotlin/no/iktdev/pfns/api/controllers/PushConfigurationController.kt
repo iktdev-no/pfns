@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/fcm/config")
 class PushConfigurationController(
-    @Autowired val firebase: FirebaseService
+    @Autowired val firebaseService: FirebaseService
 ) {
     val log = KotlinLogging.logger {}
 
@@ -40,13 +40,19 @@ class PushConfigurationController(
             .putData("server", Gson().toJson(data.server))
             .setToken(data.receiverId)
             .build()
-        if (firebase.firebaseApp == null) {
+
+
+        if (firebaseService.firebaseApp == null) {
             log.error { "Service/FirebaseApp is null" }
             return ResponseEntity.status(HttpStatus.METHOD_FAILURE).build()
         }
-        firebase.firebaseApp?.let { app ->
-            FirebaseMessaging.getInstance(app).send(message)
+        val success = firebaseService.sendMessage(message)
+        if (success) {
             log.info { "Sending requested payload on 'configure-server' to FCM for ${data.receiverId}" }
+
+        } else {
+            log.error { "Failed to send message to FCM for ${data.receiverId}" }
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to send message to FCM")
         }
         return ResponseEntity.ok().build()
     }

@@ -18,6 +18,9 @@ class RegisterDeviceController {
 
     @PostMapping("receiver")
     fun registerClient(@RequestBody data: RegisterDeviceObject, request: HttpServletRequest): ResponseEntity<Boolean> {
+        if (data.receiverId.isBlank()) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(false)
+        }
         val success = RegisteredDevices.storeApiTokenOrUpdate(
             serverId = data.serverId,
             receiverId = data.receiverId,

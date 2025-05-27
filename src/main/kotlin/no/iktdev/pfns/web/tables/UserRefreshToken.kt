@@ -28,12 +28,11 @@ object UserRefreshToken: IntIdTable() {
     fun storeRefreshToken(email: String, token: String, expiresAt: Instant): String {
         return transaction {
             // Sjekk om brukeren allerede har et refresh-token
-            val existingRowId = UserRefreshToken.selectAll()
+            val hasExisting = UserRefreshToken.select(UserRefreshToken.email)
                 .where { UserRefreshToken.email eq email }
-                .map { it -> it[UserRefreshToken.id].value }
-                .firstOrNull()
+                .count() > 0
             val jit = UUID.randomUUID().toString() + "-refresh"
-            if (existingRowId != null) {
+            if (hasExisting) {
                 // Oppdater eksisterende rad og returner ID
                 UserRefreshToken.update ({ UserRefreshToken.email eq email }) {
                     it[UserRefreshToken.jit] = jit
@@ -66,12 +65,30 @@ object UserRefreshToken: IntIdTable() {
         }
     }
 
-    fun isRefreshTokenValid(jit: String): Boolean {
+    fun isRefreshTokenValid(token: String): Boolean {
+        return transaction {
+            UserRefreshToken.selectAll()
+                .where { UserRefreshToken.token eq token }
+                .andWhere { revoked eq false }
+                .singleOrNull()?.let { !it[revoked] } ?: false
+        }
+    }
+
+    fun isAccessTokenValidWithJit(jit: String): Boolean {
         return transaction {
             UserRefreshToken.selectAll()
                 .where { UserRefreshToken.jit eq jit }
                 .andWhere { revoked eq false }
-                .singleOrNull()?.let { !it[revoked] } ?: false
+                .count() != 0L
+        }
+    }
+
+    fun isAccessTokenValid(token: String): Boolean {
+        return transaction {
+            UserRefreshToken.selectAll()
+                .where { UserRefreshToken.jit eq "$jit-refresh" }
+                .andWhere { revoked eq false }
+                .count() != 0L
         }
     }
 

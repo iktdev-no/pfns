@@ -27,7 +27,11 @@ abstract class TokenImpl(val secret: String) {
     }
 
     open fun isValid(token: String): Boolean {
-        return decode(token)?.let { j -> isValid(j) } ?: false
+        return try {
+            decode(token)?.let { j -> isValid(j) } ?: false
+        } catch (e: Exception) {
+            false
+        }
     }
 
     fun decode(token: String): DecodedJWT? {

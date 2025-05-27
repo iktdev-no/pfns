@@ -27,13 +27,19 @@ class UserAuthenticationService(
         return postAuthenticationOnLogin(user)
     }
 
-    fun getUserFromToken(token: String): User? {
-        return userService.getUserOn(token)
+    fun getUserFromAccessToken(token: String): User? {
+        return userService.getUserByAccessToken(token)
+    }
+
+    fun getUserFromRefreshToken(refreshToken: String): User? {
+        val email = userService.getEmailOnRefreshToken(refreshToken) ?: return null
+        return userService.getUserByEmail(email)
     }
 
     fun getNewTokens(refreshToken: String): TokenPair? {
+        val user = getUserFromRefreshToken(refreshToken) ?: return null
         val canCreateNewAccessToken = UserRefreshToken.refreshTokenExistsAndIsValid(refreshToken)
-        if (canCreateNewAccessToken) {
+        if (canCreateNewAccessToken && !user.disabled) {
             val email = userService.getEmailOnRefreshToken(refreshToken) ?: run {
                 return null
             }
@@ -44,6 +50,11 @@ class UserAuthenticationService(
 
     fun isAccessTokenValid(accessToken: String): Boolean {
         return userService.tokenService.isValid(accessToken)
+    }
+
+    fun userCanLogin(accessToken: String): Boolean {
+        val user = getUserFromAccessToken(accessToken) ?: return false
+        return !user.disabled
     }
 
 }

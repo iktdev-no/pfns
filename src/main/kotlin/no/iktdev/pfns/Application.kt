@@ -1,10 +1,10 @@
 package no.iktdev.pfns
 
 import mu.KotlinLogging
-import no.iktdev.pfns.database.MySqlDataSource
 import no.iktdev.pfns.interceptor.AuthorizationInterceptor
 import no.iktdev.pfns.api.table.ApiToken
 import no.iktdev.pfns.api.table.RegisteredDevices
+import no.iktdev.pfns.database.MySqlDataSource
 import no.iktdev.pfns.web.tables.UserRefreshToken
 import no.iktdev.pfns.web.tables.UserTable
 import org.jetbrains.exposed.sql.Database
@@ -13,6 +13,7 @@ import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Configuration
@@ -23,11 +24,11 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import org.springframework.web.servlet.resource.PathResourceResolver
+import java.io.File
 import kotlin.system.exitProcess
 
 val log = KotlinLogging.logger {}
 
-@EnableScheduling
 @SpringBootApplication
 class Application {
 }
@@ -46,18 +47,18 @@ fun databaseSetup(database: Database) {
     }
 }
 
+
 var context: ApplicationContext? = null
 fun main(args: Array<String>) {
-    val dataSource = MySqlDataSource.fromDatabaseEnv()
-    val database = dataSource.createDatabase()?.also { x ->
+    val datasource = MySqlDataSource.fromDatabaseEnv()
+    val database = datasource.createDatabase().also { x ->
         println(x)
-        databaseSetup(x)
-    } ?: run {
-        log.error { "Failed to connect to database!" }
-        exitProcess(1)
-    }
+    } ?: throw RuntimeException("Unable to create database..")
 
+
+    databaseSetup(database)
     context = runApplication<Application>(*args)
+
     if (Env.targetApplicationPackageName.isNullOrBlank()) {
         log.error { "Target application package name is not defined!" }
         exitProcess(1)
