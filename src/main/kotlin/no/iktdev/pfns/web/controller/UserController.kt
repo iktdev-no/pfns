@@ -18,7 +18,7 @@ import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletResponse
 
 @RestController
-@RequestMapping("/api/web/auth")
+@RequestMapping("/webapi/auth")
 class UserController(
     @Autowired val authentication: UserAuthenticationService
 ) {

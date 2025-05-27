@@ -17,7 +17,7 @@ import kotlin.run
 
 @Component
 @Order(1)
-class AuthorizationInterceptor(
+class WebAuthorizationInterceptor(
     @Autowired val tokenService: UserTokenService
 ): AuthorizationInterceptorImpl() {
     val log = KotlinLogging.logger {}

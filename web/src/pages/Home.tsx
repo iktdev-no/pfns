@@ -91,7 +91,7 @@ function OverviewComponent({ apiKeys }: { apiKeys: ApiKeyObjects }): JSX.Element
   const navigate = useNavigate();
 
   const getTokens = useCallback((onData: (items: ApiKeyObjects) => void) => {
-    apiFetch(`${props.backendUrl}/api/web/token/all`, { method: "GET" }, false, () => {
+    apiFetch(`${props.backendUrl}/webapi/token/all`, { method: "GET" }, false, () => {
       window.location.href = "/";
     })
       .then(response => response.status === 200 ? response.json() : [])
@@ -104,7 +104,7 @@ function OverviewComponent({ apiKeys }: { apiKeys: ApiKeyObjects }): JSX.Element
   }, [getTokens, dispatch]);
 
   const deleteToken = (serverId: string) => {
-    apiFetch(`${props.backendUrl}/api/web/token`, {
+    apiFetch(`${props.backendUrl}/webapi/token`, {
       method: "DELETE",
       body: serverId
     }, true, () => {

@@ -19,7 +19,7 @@ export default function CreateToken() {
             console.error("Server ID is null");
             return;
         }
-        apiFetch(`${props.backendUrl}/api/web/token/create`, {
+        apiFetch(`${props.backendUrl}/webapi/token/create`, {
             method: "POST",
             body: serverId
         }, true, () => {

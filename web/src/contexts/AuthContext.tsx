@@ -41,7 +41,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const refreshToken = async () => {
-    await fetch(`${envProperties.backendUrl}/api/web/auth/refresh`, { 
+    await fetch(`${envProperties.backendUrl}/webapi/auth/refresh`, { 
         method: "POST", 
         credentials: "include" 
       })
@@ -92,7 +92,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    fetch(`${envProperties.backendUrl}/api/web/auth/login`, {
+    fetch(`${envProperties.backendUrl}/webapi/auth/login`, {
         credentials: "include",
         method: "GET",
         headers: {
@@ -123,7 +123,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = () => {
     localStorage.removeItem(localStorageKeys.accessToken);
-    fetch(`${envProperties.backendUrl}/api/web/auth/logout`, {
+    fetch(`${envProperties.backendUrl}/webapi/auth/logout`, {
         method: "GET",
         credentials: "include",
       })

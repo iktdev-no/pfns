@@ -1,10 +1,11 @@
 package no.iktdev.pfns
 
 import mu.KotlinLogging
-import no.iktdev.pfns.interceptor.AuthorizationInterceptor
+import no.iktdev.pfns.interceptor.WebAuthorizationInterceptor
 import no.iktdev.pfns.api.table.ApiToken
 import no.iktdev.pfns.api.table.RegisteredDevices
 import no.iktdev.pfns.database.MySqlDataSource
+import no.iktdev.pfns.interceptor.ApiAuthorizationInterceptor
 import no.iktdev.pfns.web.tables.UserRefreshToken
 import no.iktdev.pfns.web.tables.UserTable
 import org.jetbrains.exposed.sql.Database
@@ -13,18 +14,15 @@ import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.io.Resource
-import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.web.servlet.config.annotation.CorsRegistry
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import org.springframework.web.servlet.resource.PathResourceResolver
-import java.io.File
 import kotlin.system.exitProcess
 
 val log = KotlinLogging.logger {}
@@ -67,12 +65,14 @@ fun main(args: Array<String>) {
 
 @Configuration
 class InterceptorConfiguration(
-    @Autowired val authInterceptor: AuthorizationInterceptor
+    @Autowired val authInterceptor: WebAuthorizationInterceptor,
+    @Autowired val apiAuthInterceptor: ApiAuthorizationInterceptor
 ): WebMvcConfigurer {
     override fun addInterceptors(registry: InterceptorRegistry) {
         super.addInterceptors(registry)
         log.info { "Adding AuthorizationInterceptor" }
-        registry.addInterceptor(authInterceptor).addPathPatterns("/**")
+        registry.addInterceptor(authInterceptor).addPathPatterns("/webapi/**")
+        registry.addInterceptor(apiAuthInterceptor).addPathPatterns("/api/**")
     }
 
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {

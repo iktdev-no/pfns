@@ -29,6 +29,6 @@ export const envProperties: EnvProperties = {
     backendUrl: getBackendUrl(),
     google: {
         clientId: getEnvVariable("REACT_APP_GOOGLE_CLIENT_ID"),
-        authUrl: getBackendUrl() + "/api/web/auth/login/google",
+        authUrl: getBackendUrl() + "/webapi/auth/login/google",
     }
 }

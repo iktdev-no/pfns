@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController
 import javax.servlet.http.HttpServletRequest
 
 @RestController
-@RequestMapping("/api/web/token")
+@RequestMapping("/webapi/token")
 class ApiTokensController(
     @Autowired val authentication: UserAuthenticationService,
     @Autowired val apiTokenService: ApiTokenService
