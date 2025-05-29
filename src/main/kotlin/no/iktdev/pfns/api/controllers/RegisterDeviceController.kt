@@ -33,6 +33,5 @@ class RegisterDeviceController {
         } else {
             ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(false)
         }
-
     }
 }
