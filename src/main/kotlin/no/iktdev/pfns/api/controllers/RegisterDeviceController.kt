@@ -20,12 +20,12 @@ class RegisterDeviceController {
     @RequiresApiAuthentication(Mode.None)
     @PostMapping("receiver")
     fun registerClient(@RequestBody data: RegisterDeviceObject, request: HttpServletRequest): ResponseEntity<Boolean> {
-        if (data.receiverId.isBlank()) {
+        if (data.fcmReceiverId.isBlank()) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(false)
         }
         val success = RegisteredDevices.storeApiTokenOrUpdate(
             serverId = data.serverId,
-            receiverId = data.receiverId,
+            fcmReceiverId = data.fcmReceiverId,
             ip = request.getRequestersIp()
         )
         return if (success) {
