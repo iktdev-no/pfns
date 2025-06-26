@@ -4,6 +4,7 @@ import com.google.firebase.FirebaseApp
 import no.iktdev.pfns.TestBaseWithDatabase
 import no.iktdev.pfns.api.objects.RemoteServer
 import no.iktdev.pfns.api.objects.RemoteServerObject
+import no.iktdev.pfns.api.table.DeviceIdentifiers
 import no.iktdev.pfns.api.table.RegisteredDevices
 import no.iktdev.pfns.token.ApiTokenService
 import no.iktdev.pfns.token.UserTokenService
@@ -49,7 +50,7 @@ class PushConfigurationControllerTest : TestBaseWithDatabase() {
 
     @Test
     fun `sendServerConfiguration returns 403 FORBIDDEN if not registered`() {
-        val data = RemoteServerObject(serverId = "srv1", receiverId = "rcv1", server = remoteServer)
+        val data = RemoteServerObject(serverId = "srv1", pfnsReceiverId = "rcv1", server = remoteServer)
         val headers = HttpHeaders()
         headers.addAuthorizationBearer()
         headers.contentType = MediaType.APPLICATION_JSON
@@ -67,13 +68,14 @@ class PushConfigurationControllerTest : TestBaseWithDatabase() {
     @Test
     fun `sendServerConfiguration returns 200 OK if registered and firebaseApp is not null`() {
         transaction {
-            RegisteredDevices.storeApiTokenOrUpdate("srv1", "rcv1", "127.0.0.1")
+            DeviceIdentifiers.storeIdentifier("rcv1", "pfnsRcv1")
+            RegisteredDevices.storeApiTokenOrUpdate("srv1", "pfnsRcv1", "127.0.0.1")
         }
         Mockito.`when`(firebaseService.firebaseApp).thenReturn(Mockito.mock(FirebaseApp::class.java))
 
         Mockito.`when`(firebaseService.sendMessage(any())).thenReturn(true)
 
-        val data = RemoteServerObject(serverId = "srv1", receiverId = "rcv1", server = remoteServer)
+        val data = RemoteServerObject(serverId = "srv1", pfnsReceiverId = "pfnsRcv1", server = remoteServer)
         val headers = HttpHeaders()
         headers.addAuthorizationBearer()
 
@@ -92,11 +94,12 @@ class PushConfigurationControllerTest : TestBaseWithDatabase() {
     @Test
     fun `sendServerConfiguration returns 420 METHOD_FAILURE if firebaseApp is null`() {
         transaction {
-            RegisteredDevices.storeApiTokenOrUpdate("srv1", "rcv1", "127.0.0.1")
+            DeviceIdentifiers.storeIdentifier("rcv1", "pfnsRcv1")
+            RegisteredDevices.storeApiTokenOrUpdate("srv1", "pfnsRcv1", "127.0.0.1")
         }
         Mockito.`when`(firebaseService.firebaseApp).thenReturn(null)
 
-        val data = RemoteServerObject(serverId = "srv1", receiverId = "rcv1", server = remoteServer)
+        val data = RemoteServerObject(serverId = "srv1", pfnsReceiverId = "pfnsRcv1", server = remoteServer)
         val headers = HttpHeaders()
         headers.addAuthorizationBearer()
 
@@ -116,9 +119,10 @@ class PushConfigurationControllerTest : TestBaseWithDatabase() {
     fun `sendServerConfiguration returns 403 FORBIDDEN if serverId does not match`() {
         // Register with a different serverId
         transaction {
-            RegisteredDevices.storeApiTokenOrUpdate("srv2", "rcv1", "127.0.0.1")
+            DeviceIdentifiers.storeIdentifier("rcv1", "pfnsRcv1")
+            RegisteredDevices.storeApiTokenOrUpdate("srv2", "pfnsRcv1", "127.0.0.1")
         }
-        val data = RemoteServerObject(serverId = "srv1", receiverId = "rcv1", server = remoteServer)
+        val data = RemoteServerObject(serverId = "srv1", pfnsReceiverId = "rcv1", server = remoteServer)
         val headers = HttpHeaders()
         headers.addAuthorizationBearer()
 
@@ -138,12 +142,13 @@ class PushConfigurationControllerTest : TestBaseWithDatabase() {
     fun `sendServerConfiguration returns 200 OK if only receiverId is registered and serverId is null`() {
         // Register device with only receiverId (no serverId)
         transaction {
-            RegisteredDevices.storeApiTokenOrUpdate(null, "rcv1", "127.0.0.1")
+            DeviceIdentifiers.storeIdentifier("rcv1", "pfnsRcv1")
+            RegisteredDevices.storeApiTokenOrUpdate(null, "pfnsRcv1", "127.0.0.1")
         }
         Mockito.`when`(firebaseService.firebaseApp).thenReturn(Mockito.mock(FirebaseApp::class.java))
         Mockito.`when`(firebaseService.sendMessage(any())).thenReturn(true)
 
-        val data = RemoteServerObject(serverId = null, receiverId = "rcv1", server = remoteServer)
+        val data = RemoteServerObject(serverId = null, pfnsReceiverId = "pfnsRcv1", server = remoteServer)
         val headers = HttpHeaders()
         headers.addAuthorizationBearer()
 
@@ -168,7 +173,7 @@ class PushConfigurationControllerTest : TestBaseWithDatabase() {
         Mockito.`when`(firebaseService.firebaseApp).thenReturn(Mockito.mock(FirebaseApp::class.java))
         Mockito.`when`(firebaseService.sendMessage(any())).thenReturn(true)
 
-        val data = RemoteServerObject(serverId = null, receiverId = "rcv1", server = remoteServer)
+        val data = RemoteServerObject(serverId = null, pfnsReceiverId = "rcv1", server = remoteServer)
         val headers = HttpHeaders()
         headers.addAuthorizationBearer()
 

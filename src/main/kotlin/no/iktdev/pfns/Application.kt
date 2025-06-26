@@ -3,6 +3,7 @@ package no.iktdev.pfns
 import mu.KotlinLogging
 import no.iktdev.pfns.interceptor.WebAuthorizationInterceptor
 import no.iktdev.pfns.api.table.ApiToken
+import no.iktdev.pfns.api.table.DeviceIdentifiers
 import no.iktdev.pfns.api.table.RegisteredDevices
 import no.iktdev.pfns.database.MySqlDataSource
 import no.iktdev.pfns.interceptor.ApiAuthorizationInterceptor
@@ -35,7 +36,8 @@ val tables: Array<Table> = arrayOf(
     UserTable,
     UserRefreshToken,
     ApiToken,
-    RegisteredDevices
+    RegisteredDevices,
+    DeviceIdentifiers,
 )
 
 fun databaseSetup(database: Database) {

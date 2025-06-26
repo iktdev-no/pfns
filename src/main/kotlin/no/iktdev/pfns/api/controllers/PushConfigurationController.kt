@@ -30,15 +30,22 @@ class PushConfigurationController(
     @PostMapping("server")
     fun sendServerConfiguration(@RequestBody data: RemoteServerObject): ResponseEntity<String> {
 
-        val registeredToServer = RegisteredDevices.findRegisteredDevice(data.serverId, data.receiverId)
+        val registeredToServer = RegisteredDevices.findRegisteredDevice(data.pfnsReceiverId)
         if (registeredToServer.isEmpty()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Could not find a receiverId that is allowed to be used by you")
         }
 
+        val fcmReceiverId = registeredToServer.find { it.serverId == data.serverId || it.serverId == null }?.fcmReceiverId
+        if (fcmReceiverId.isNullOrBlank()) {
+            log.error { "No FCM Receiver ID found for serverId: ${data.serverId} and pfnsReceiverId: ${data.pfnsReceiverId}" }
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("No FCM Receiver ID found for the provided serverId and pfnsReceiverId")
+        }
+
+
         val message = Message.builder()
             .putData("action", AppAction.ConfigureServer)
             .putData("server", Gson().toJson(data.server))
-            .setToken(data.receiverId)
+            .setToken(fcmReceiverId)
             .build()
 
 
@@ -48,10 +55,10 @@ class PushConfigurationController(
         }
         val success = firebaseService.sendMessage(message)
         if (success) {
-            log.info { "Sending requested payload on 'configure-server' to FCM for ${data.receiverId}" }
+            log.info { "Sending requested payload on 'configure-server' over FCM using pfnsReceiverId: ${data.pfnsReceiverId}" }
 
         } else {
-            log.error { "Failed to send message to FCM for ${data.receiverId}" }
+            log.error { "Failed to send message over FCM for pfnsReceiverId: ${data.pfnsReceiverId}" }
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to send message to FCM")
         }
         return ResponseEntity.ok().build()

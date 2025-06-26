@@ -24,36 +24,34 @@ class RegisterDeviceControllerTest : TestBaseWithDatabase() {
 
     @Test
     fun `registerClient returns 200 OK on success`() {
-        val data = RegisterDeviceObject(serverId = "srv1", fcmReceiverId = "rcv1")
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
-        val entity = HttpEntity(data, headers)
+        val entity = HttpEntity("rcv1", headers)
 
         val response = restTemplate.postForEntity(
             "/api/fcm/register/receiver",
             entity,
-            Boolean::class.java
+            String::class.java
         )
 
         assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
-        assertThat(response.body).isTrue()
+        assertThat(response.body).isNotEmpty()
     }
 
     @Test
     fun `registerClient returns 406 NOT_ACCEPTABLE on failure`() {
         // Simuler feil ved å mocke RegisteredDevices, men her kan vi sende ugyldig data
-        val data = RegisterDeviceObject(serverId = null, fcmReceiverId = "") // tom receiverId bør feile
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
-        val entity = HttpEntity(data, headers)
+        val entity = HttpEntity("\"\"", headers)
 
         val response = restTemplate.postForEntity(
             "/api/fcm/register/receiver",
             entity,
-            Boolean::class.java
+            String::class.java
         )
 
         assertThat(response.statusCode).isEqualTo(HttpStatus.NOT_ACCEPTABLE)
-        assertThat(response.body).isFalse()
+        assertThat(response.body).isEqualTo("FCM Receiver ID cannot be blank.")
     }
 }

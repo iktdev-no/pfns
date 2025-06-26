@@ -4,9 +4,9 @@ import java.io.Serializable
 
 data class RemoteServerObject(
     override val serverId: String?,
-    override val receiverId: String,
+    override val pfnsReceiverId: String,
     val server: RemoteServer
-) : RemoteDeviceBase(serverId, receiverId) {
+) : RemoteDeviceBase(serverId, pfnsReceiverId) {
 }
 
 
