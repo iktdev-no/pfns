@@ -47,7 +47,7 @@ class UserControllerTest: TestBaseWithDatabase() {
         val entity = HttpEntity<String>(null, headers)
 
         val response = restTemplate.exchange(
-            "/api/web/auth/login",
+            "/webapi/auth/login",
             HttpMethod.GET,
             entity,
             String::class.java
@@ -69,7 +69,7 @@ class UserControllerTest: TestBaseWithDatabase() {
         val entity = HttpEntity<String>(null, headers)
 
         val response = restTemplate.exchange(
-            "/api/web/auth/login",
+            "/webapi/auth/login",
             HttpMethod.GET,
             entity,
             String::class.java
@@ -99,7 +99,7 @@ class UserControllerTest: TestBaseWithDatabase() {
         val entity = HttpEntity<String>(null, headers)
 
         val response = restTemplate.exchange(
-            "/api/web/auth/login",
+            "/webapi/auth/login",
             HttpMethod.GET,
             entity,
             String::class.java
@@ -137,7 +137,7 @@ class UserControllerTest: TestBaseWithDatabase() {
         val entity = HttpEntity<String>(null, headers)
 
         val response = restTemplate.exchange(
-            "/api/web/auth/login",
+            "/webapi/auth/login",
             HttpMethod.GET,
             entity,
             String::class.java

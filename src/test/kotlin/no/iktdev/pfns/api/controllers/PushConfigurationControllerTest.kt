@@ -5,6 +5,8 @@ import no.iktdev.pfns.TestBaseWithDatabase
 import no.iktdev.pfns.api.objects.RemoteServer
 import no.iktdev.pfns.api.objects.RemoteServerObject
 import no.iktdev.pfns.api.table.RegisteredDevices
+import no.iktdev.pfns.token.ApiTokenService
+import no.iktdev.pfns.token.UserTokenService
 import org.assertj.core.api.Assertions.assertThat
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -49,6 +51,7 @@ class PushConfigurationControllerTest : TestBaseWithDatabase() {
     fun `sendServerConfiguration returns 403 FORBIDDEN if not registered`() {
         val data = RemoteServerObject(serverId = "srv1", receiverId = "rcv1", server = remoteServer)
         val headers = HttpHeaders()
+        headers.addAuthorizationBearer()
         headers.contentType = MediaType.APPLICATION_JSON
         val entity = HttpEntity(data, headers)
 
@@ -72,6 +75,8 @@ class PushConfigurationControllerTest : TestBaseWithDatabase() {
 
         val data = RemoteServerObject(serverId = "srv1", receiverId = "rcv1", server = remoteServer)
         val headers = HttpHeaders()
+        headers.addAuthorizationBearer()
+
         headers.contentType = MediaType.APPLICATION_JSON
         val entity = HttpEntity(data, headers)
 
@@ -93,6 +98,8 @@ class PushConfigurationControllerTest : TestBaseWithDatabase() {
 
         val data = RemoteServerObject(serverId = "srv1", receiverId = "rcv1", server = remoteServer)
         val headers = HttpHeaders()
+        headers.addAuthorizationBearer()
+
         headers.contentType = MediaType.APPLICATION_JSON
         val entity = HttpEntity(data, headers)
 
@@ -113,6 +120,8 @@ class PushConfigurationControllerTest : TestBaseWithDatabase() {
         }
         val data = RemoteServerObject(serverId = "srv1", receiverId = "rcv1", server = remoteServer)
         val headers = HttpHeaders()
+        headers.addAuthorizationBearer()
+
         headers.contentType = MediaType.APPLICATION_JSON
         val entity = HttpEntity(data, headers)
 
@@ -136,6 +145,8 @@ class PushConfigurationControllerTest : TestBaseWithDatabase() {
 
         val data = RemoteServerObject(serverId = null, receiverId = "rcv1", server = remoteServer)
         val headers = HttpHeaders()
+        headers.addAuthorizationBearer()
+
         headers.contentType = MediaType.APPLICATION_JSON
         val entity = HttpEntity(data, headers)
 
@@ -159,6 +170,8 @@ class PushConfigurationControllerTest : TestBaseWithDatabase() {
 
         val data = RemoteServerObject(serverId = null, receiverId = "rcv1", server = remoteServer)
         val headers = HttpHeaders()
+        headers.addAuthorizationBearer()
+
         headers.contentType = MediaType.APPLICATION_JSON
         val entity = HttpEntity(data, headers)
 

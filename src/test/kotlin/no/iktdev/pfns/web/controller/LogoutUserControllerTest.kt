@@ -24,7 +24,7 @@ class LogoutUserControllerTest: TestBase() {
         val entity = HttpEntity<String>(null, headers)
 
         val response = restTemplate.exchange(
-            "/api/web/auth/logout",
+            "/webapi/auth/logout",
             HttpMethod.GET,
             entity,
             String::class.java
@@ -41,7 +41,7 @@ class LogoutUserControllerTest: TestBase() {
         val entity = HttpEntity<String>(null, HttpHeaders())
 
         val response = restTemplate.exchange(
-            "/api/web/auth/logout",
+            "/webapi/auth/logout",
             HttpMethod.GET,
             entity,
             String::class.java
