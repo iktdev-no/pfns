@@ -54,4 +54,49 @@ class RegisterDeviceControllerTest : TestBaseWithDatabase() {
         assertThat(response.statusCode).isEqualTo(HttpStatus.NOT_ACCEPTABLE)
         assertThat(response.body).isEqualTo("FCM Receiver ID cannot be blank.")
     }
+
+    @Test
+    fun `CORS filter sets Access-Control-Allow-Origin for valid Origin`() {
+        val headers = HttpHeaders()
+        headers.origin = "https://web.pfns.iktdev.no"
+        headers.contentType = MediaType.APPLICATION_JSON
+        headers.accept = listOf(MediaType.APPLICATION_JSON)
+
+        val entity = HttpEntity("rcv1", headers)
+
+        val response = restTemplate.exchange(
+            "/api/fcm/register/receiver",
+            HttpMethod.OPTIONS,  // Simulerer preflight
+            entity,
+            String::class.java
+        )
+
+        assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
+        assertThat(response.headers["Access-Control-Allow-Origin"]).contains("https://web.pfns.iktdev.no")
+        assertThat(response.headers["Access-Control-Allow-Credentials"]).contains("true")
+        assertThat(response.headers["Access-Control-Allow-Methods"]).contains("GET, POST, PUT, DELETE, OPTIONS")
+    }
+
+    @Test
+    fun `CORS filter sets Access-Control-Allow-Origin for a random Origin`() {
+        val headers = HttpHeaders()
+        headers.origin = "https://potetmos.no"
+        headers.contentType = MediaType.APPLICATION_JSON
+        headers.accept = listOf(MediaType.APPLICATION_JSON)
+
+        val entity = HttpEntity("rcv1", headers)
+
+        val response = restTemplate.exchange(
+            "/api/fcm/register/receiver",
+            HttpMethod.OPTIONS,  // Simulerer preflight
+            entity,
+            String::class.java
+        )
+
+        assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
+        assertThat(response.headers["Access-Control-Allow-Origin"]).contains("https://potetmos.no")
+        assertThat(response.headers["Access-Control-Allow-Credentials"]).contains("true")
+        assertThat(response.headers["Access-Control-Allow-Methods"]).contains("GET, POST, PUT, DELETE, OPTIONS")
+    }
+
 }
